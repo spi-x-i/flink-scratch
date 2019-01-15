@@ -21,7 +21,7 @@ object Startup extends App {
   val sourceOfNumbersStream = see.addSource(new RndSourceFunction())
 
   val currentMaxStream: DataStream[Numbers] =
-    sourceOfNumbersStream.flatMap(new MaxFlatMapFunction())
+    sourceOfNumbersStream.keyBy(_.key).flatMap(new MaxFlatMapFunction())
 
   currentMaxStream.writeAsText("out/outcome.txt", WriteMode.OVERWRITE)
 
