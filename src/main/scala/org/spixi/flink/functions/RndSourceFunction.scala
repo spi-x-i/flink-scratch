@@ -2,13 +2,12 @@ package org.spixi.flink.functions
 
 import java.util.concurrent.atomic.AtomicBoolean
 
-import org.apache.flink.streaming.api.functions.source.{
-  ParallelSourceFunction,
-  SourceFunction
-}
+import org.apache.flink.streaming.api.functions.source.{ParallelSourceFunction, SourceFunction}
 import org.spixi.flink.models.Numbers
 
 class RndSourceFunction extends ParallelSourceFunction[Numbers] {
+
+  val keys = Map(0 -> "A", 1 -> "B", 2 -> "C", 3 -> "D")
 
   private lazy val rnd = scala.util.Random
 
@@ -17,15 +16,14 @@ class RndSourceFunction extends ParallelSourceFunction[Numbers] {
   override def run(ctx: SourceFunction.SourceContext[Numbers]): Unit = {
 
     while (isRunning.get()) {
-      val nextInt = rnd.nextInt(10000)
-      val waitUntil = rnd.nextInt(20000) + 1000
-
-      println(waitUntil)
+      val nextKey = rnd.nextInt(4)
+      val nextInt = rnd.nextInt(1000)
+      val waitUntil = rnd.nextInt(4000) + 1000
 
       ctx.getCheckpointLock.synchronized {
-        val toEmit = Numbers(nextInt, System.currentTimeMillis())
+        val toEmit = Numbers(keys(nextKey), nextInt, System.currentTimeMillis())
         ctx.collect(toEmit)
-        Thread.sleep(2000l)
+        Thread.sleep(waitUntil)
       }
     }
   }
@@ -33,4 +31,5 @@ class RndSourceFunction extends ParallelSourceFunction[Numbers] {
   override def cancel(): Unit = {
     isRunning.set(false)
   }
+
 }

@@ -13,7 +13,7 @@ class MaxFlatMapFunction extends RichFlatMapFunction[Numbers, Numbers] {
     getRuntimeContext.getState(descriptor)
   }
 
-  private def getState = Option(_state.value()).getOrElse(Numbers(0, 0l))
+  private def getState = Option(_state.value()).getOrElse(Numbers("", 0, 0l))
 
   override def flatMap(value: Numbers, out: Collector[Numbers]): Unit = {
     val currentMax = getState
