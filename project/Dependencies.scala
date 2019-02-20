@@ -8,6 +8,7 @@ object Dependencies {
 
     lazy val scala          = namespace %% "flink-scala"           % version % "provided"
     lazy val streamingScala = namespace %% "flink-streaming-scala" % version % "provided"
+    lazy val guess = "io.radicalbit" %% "guess-operators-"
   }
 
   lazy val flinkDependencies = Seq(flink.scala, flink.streamingScala)

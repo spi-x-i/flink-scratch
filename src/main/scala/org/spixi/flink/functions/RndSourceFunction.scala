@@ -2,7 +2,10 @@ package org.spixi.flink.functions
 
 import java.util.concurrent.atomic.AtomicBoolean
 
-import org.apache.flink.streaming.api.functions.source.{ParallelSourceFunction, SourceFunction}
+import org.apache.flink.streaming.api.functions.source.{
+  ParallelSourceFunction,
+  SourceFunction
+}
 import org.spixi.flink.models.Numbers
 
 class RndSourceFunction extends ParallelSourceFunction[Numbers] {
@@ -21,7 +24,8 @@ class RndSourceFunction extends ParallelSourceFunction[Numbers] {
       val waitUntil = rnd.nextInt(4000) + 1000
 
       ctx.getCheckpointLock.synchronized {
-        val toEmit = Numbers(keys(nextKey), nextInt, System.currentTimeMillis())
+        val toEmit =
+          Numbers(keys(nextKey), nextInt, System.currentTimeMillis())
         ctx.collect(toEmit)
         Thread.sleep(waitUntil)
       }
